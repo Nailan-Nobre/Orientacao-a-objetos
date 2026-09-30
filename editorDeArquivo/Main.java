@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        String arquivo = "editorDeArquivo/arquivo.md";
+        String arquivo = "editorDeArquivo/readme.md";
         Leitor leitor = new Leitor(arquivo);
         Editor editor = new Editor(arquivo);
         Scanner sc = new Scanner(System.in);
