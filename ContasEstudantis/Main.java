@@ -1,57 +1,49 @@
 package ContasEstudantis;
-import java.util.Scanner;
 
 public class Main {
-    
+
     public static void main(String[] args) {
 
-        new Aluno("Carlos Silva", "123456", "carlossilva@email.com");
-        new Aluno("Beatriz Souza", "654321", "beatrizsouza@email.com");
-        
-        ContaEstudantil conta1 = new ContaEstudantil("001", "Carlos Silva", 0.0, 10.0);
-        ContaEstudantil conta2 = new ContaEstudantil("002", "Beatriz Souza", 0.0, 10.0);
+        // 1) Instanciação dos alunos
+        Aluno carlos  = new Aluno("Carlos Silva",  "123456", "carlossilva@email.com");
+        Aluno beatriz = new Aluno("Beatriz Souza", "654321", "beatrizsouza@email.com");
 
-        Scanner sc = new Scanner(System.in);
-    
-        int opcao = -1;
-    
-        while (opcao != 0) {
-            System.out.println("\n===== MENU PADRAO =====");
-            System.out.println("1 - Depositar");
-            System.out.println("2 - Pagar");
-            System.out.println("3 - Transferir");
-            System.out.println("0 - Sair");
-            System.out.print("Escolha: ");
-    
-            try {
-                opcao = Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.println("Digite um número válido.");
-                continue;
-            }
-    
-            switch (opcao) {
-                case 1 -> {
-                    System.out.println("\n--- DEPOSITAR ---");
-                    conta1.depositar(100.0);
-                    conta2.depositar(100.0);
-                }
-                case 2 -> {
-                    System.out.println("\n--- PAGAR ---");
-                    conta1.pagar(30.0);
-                    conta2.pagar(20.0);
-                }
-                case 3 -> {
-                    System.out.println("\n--- TRANSFERIR ---");
-                    conta1.transferir(conta2, 50.0);
-                    conta2.transferir(conta1, 25.0);
-                }
-                case 0 -> System.out.println("Encerrando...");
-                default -> System.out.println("Opção inválida!");
-            }
-        }
-    
-        sc.close();
+        // 2) Contas associadas aos alunos (limite de crédito R$ 50,00 para o Carlos)
+        ContaEstudantil contaDoCarlos  = new ContaEstudantil("001", carlos,  50.0);
+        ContaEstudantil contaDaBeatriz = new ContaEstudantil("002", beatriz, 50.0);
+
+        System.out.println("=== Estado inicial ===");
+        contaDoCarlos.exibirDados();
+        contaDaBeatriz.exibirDados();
+
+        // 3) Depósito inválido (negativo)
+        System.out.println("\n=== Depósito inválido (-50) na conta do Carlos ===");
+        contaDoCarlos.depositar(-50.0);
+        contaDoCarlos.exibirDados();
+
+        // 4) Depósito válido de R$ 100,00
+        System.out.println("\n=== Depósito válido (100) na conta do Carlos ===");
+        contaDoCarlos.depositar(100.0);
+        contaDoCarlos.exibirDados();
+
+        // 5) Pagamento de R$ 130,00 com saldo 100 e limite 50
+        System.out.println("\n=== Pagamento de R$ 130,00 na conta do Carlos ===");
+        boolean ok = contaDoCarlos.pagar(130.0);
+        System.out.println("Pagamento autorizado? " + ok);
+        contaDoCarlos.exibirDados();
+
+        // 6) Tentativa de pagamento acima do limite disponível
+        System.out.println("\n=== Pagamento de R$ 30,00 (deve falhar: saldo+limite = 20) ===");
+        boolean ok2 = contaDoCarlos.pagar(30.0);
+        System.out.println("Pagamento autorizado? " + ok2);
+        contaDoCarlos.exibirDados();
+
+        // 7) Transferência Carlos -> Beatriz
+        System.out.println("\n=== Transferência de R$ 10,00 de Carlos para Beatriz ===");
+        contaDoCarlos.transferir(contaDaBeatriz, 10.0);
+
+        System.out.println("\n=== Saldos finais ===");
+        contaDoCarlos.exibirDados();
+        contaDaBeatriz.exibirDados();
     }
-
 }

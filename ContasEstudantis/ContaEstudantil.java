@@ -1,47 +1,66 @@
 package ContasEstudantis;
 
 public class ContaEstudantil {
+
     private final String numeroDaConta;
     private double saldo;
-    private String titular;
+    private final Aluno titular;   // agora é Aluno
     private double limiteDeCredito;
 
-    public ContaEstudantil(String numeroDaConta, String titular, double saldo, double limiteDeCredito) {
+    // Construtor conforme o PDF: numeroConta, titular (Aluno), limiteCredito
+    public ContaEstudantil(String numeroDaConta, Aluno titular, double limiteDeCredito) {
         this.numeroDaConta = numeroDaConta;
         this.titular = titular;
-        this.saldo = 0.0;
         this.limiteDeCredito = limiteDeCredito;
+        this.saldo = 0.0;
     }
 
-    public String getNumeroDaConta() {
-        return numeroDaConta;
+    public String getNumeroDaConta()   { return numeroDaConta; }
+    public double getSaldo()           { return saldo; }
+    public Aluno getTitular()          { return titular; }
+    public double getLimiteDeCredito() { return limiteDeCredito; }
+
+    public void setLimiteDeCredito(double limiteDeCredito) {
+        if (limiteDeCredito >= 0) this.limiteDeCredito = limiteDeCredito;
     }
 
-    public void depositar(double valor) {
+    public boolean depositar(double valor) {
         if (valor > 0) {
             saldo += valor;
-            System.out.println("Depósito de R$" + valor + " realizado com sucesso.");
-        } else {
-            System.out.println("Valor de depósito inválido.");
+            System.out.printf("Depósito de R$ %.2f realizado com sucesso.%n", valor);
+            return true;
         }
+        System.out.println("Valor de depósito inválido.");
+        return false;
     }
 
-    public void pagar(double valor) {
+    public boolean pagar(double valor) {
         if (valor > 0 && valor <= saldo + limiteDeCredito) {
             saldo -= valor;
-            System.out.println("Pagamento de R$" + valor + " realizado com sucesso.");
-        } else {
-            System.out.println("Saldo insuficiente ou valor inválido.");
+            System.out.printf("Pagamento de R$ %.2f realizado com sucesso.%n", valor);
+            return true;
         }
+        System.out.println("Saldo insuficiente ou valor inválido.");
+        return false;
     }
 
-    public void transferir(ContaEstudantil contaDestino, double valor) {
-        if (valor > 0 && valor <= saldo + limiteDeCredito) {
-            saldo -= valor;
-            contaDestino.depositar(valor);
-            System.out.println("Transferência de R$" + valor + " para a conta " + contaDestino.getNumeroDaConta() + " realizada com sucesso.");
-        } else {
-            System.out.println("Saldo insuficiente ou valor inválido.");
+    // Reutiliza pagar() e depositar() conforme o PDF
+    public boolean transferir(ContaEstudantil destino, double valor) {
+        if (destino == null || destino == this) {
+            System.out.println("Conta de destino inválida.");
+            return false;
         }
+        if (pagar(valor)) {
+            destino.depositar(valor);
+            System.out.printf("Transferência de R$ %.2f para a conta %s realizada com sucesso.%n",
+                    valor, destino.getNumeroDaConta());
+            return true;
+        }
+        return false;
+    }
+
+    public void exibirDados() {
+        System.out.printf("Conta %s | Titular: %s | Saldo: R$ %.2f | Limite: R$ %.2f%n",
+                numeroDaConta, titular.getNome(), saldo, limiteDeCredito);
     }
 }
