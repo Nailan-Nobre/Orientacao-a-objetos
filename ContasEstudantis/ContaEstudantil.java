@@ -4,10 +4,9 @@ public class ContaEstudantil {
 
     private final String numeroDaConta;
     private double saldo;
-    private final Aluno titular;   // agora é Aluno
+    private final Aluno titular;   
     private double limiteDeCredito;
 
-    // Construtor conforme o PDF: numeroConta, titular (Aluno), limiteCredito
     public ContaEstudantil(String numeroDaConta, Aluno titular, double limiteDeCredito) {
         this.numeroDaConta = numeroDaConta;
         this.titular = titular;
@@ -44,7 +43,6 @@ public class ContaEstudantil {
         return false;
     }
 
-    // Reutiliza pagar() e depositar() conforme o PDF
     public boolean transferir(ContaEstudantil destino, double valor) {
         if (destino == null || destino == this) {
             System.out.println("Conta de destino inválida.");
