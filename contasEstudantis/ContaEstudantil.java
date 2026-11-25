@@ -1,4 +1,4 @@
-package ContasEstudantis;
+package contasEstudantis;
 
 public class ContaEstudantil {
 
